@@ -3,6 +3,7 @@ package com.springlearning.MongoCrud.controller;
 import com.springlearning.MongoCrud.model.Expense;
 import com.springlearning.MongoCrud.service.ExpenseService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,14 +19,16 @@ public class ExpenseController {
         this.expenseService = expenseService;
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity addExpense(@RequestBody Expense expense) {
         expenseService.addExpense(expense);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public void updateExpense() {
-
+    @PutMapping
+    public ResponseEntity<Object> updateExpense(@RequestBody Expense expense) {
+        expenseService.updateExpense(expense);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping
@@ -33,11 +36,14 @@ public class ExpenseController {
         return ResponseEntity.ok(expenseService.getAllExpenses());
     }
 
-    public void getExpenseByName() {
-
+    @GetMapping("/{name}")
+    public ResponseEntity<Expense> getExpenseByName(@PathVariable String name) {
+        return ResponseEntity.ok(expenseService.getExpenseByName(name));
     }
 
-    public void deleteExpense() {
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteExpense(@PathVariable  String id) {
+        expenseService.deleteExpense(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
